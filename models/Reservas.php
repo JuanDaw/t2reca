@@ -39,7 +39,15 @@ class Reservas extends \yii\db\ActiveRecord
             [['vuelo_id', 'asiento'], 'unique', 'targetAttribute' => ['vuelo_id', 'asiento']],
             [['usuario_id'], 'exist', 'skipOnError' => true, 'targetClass' => Usuarios::class, 'targetAttribute' => ['usuario_id' => 'id']],
             [['vuelo_id'], 'exist', 'skipOnError' => true, 'targetClass' => Vuelos::class, 'targetAttribute' => ['vuelo_id' => 'id']],
+            [['asiento'], 'comprobarAsiento', 'skipOnError' => true],
         ];
+    }
+
+    public function comprobarAsiento($attribute, $params)
+    {
+        if ($this->vuelo !== null && $this->asiento > $this->vuelo->plazas) {
+            $this->addError($attribute, 'El asiento no puede ser superior al número de plazas');
+        }
     }
 
     /**
@@ -75,5 +83,22 @@ class Reservas extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Vuelos::class, ['id' => 'vuelo_id'])
             ->inverseOf('reservas');
+    }
+
+    public function beforeSave($insert)
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+        
+        if ($insert) {
+            $totalReservas = $this->vuelo->getReservas()->count();
+            $totalPlazas = $this->vuelo->plazas;
+            if ($totalReservas >= $totalPlazas) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
