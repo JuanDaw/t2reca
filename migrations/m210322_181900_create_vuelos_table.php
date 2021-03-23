@@ -16,10 +16,10 @@ class m210322_181900_create_vuelos_table extends Migration
             'id' => $this->bigPrimaryKey(),
             'origen_id' => $this->bigInteger()->notNull(),
             'destino_id' => $this->bigInteger()->notNull(),
-            'salida' => $this->timestamp(0),
-            'llegada' => $this->timestamp(0),
-            'plazas' => $this->smallInteger(),
-            'precio' => $this->decimal(7,2),
+            'salida' => $this->timestamp(0)->notNull(),
+            'llegada' => $this->timestamp(0)->notNull(),
+            'plazas' => $this->smallInteger()->notNull()->check('plazas >= 0'),
+            'precio' => $this->decimal(7,2)->notNull(),
         ]);
 
         $this->addForeignKey(
