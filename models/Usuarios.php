@@ -10,9 +10,9 @@ use Yii;
  * @property int $id
  * @property string $nombre
  * @property string $password
- * @property string $auth_key
- * @property string $telefono
- * @property string $poblacion
+ *
+ * @property Reservas[] $reservas
+ * @property Vuelos[] $vuelos
  */
 class Usuarios extends \yii\db\ActiveRecord
 {
@@ -31,7 +31,8 @@ class Usuarios extends \yii\db\ActiveRecord
     {
         return [
             [['nombre', 'password'], 'required'],
-            [['nombre', 'auth_key', 'telefono', 'poblacion'], 'string', 'max' => 255],
+            [['nombre'], 'string', 'max' => 255],
+            [['nombre'], 'unique'],
             [['password'], 'string', 'max' => 60],
         ];
     }
@@ -45,9 +46,28 @@ class Usuarios extends \yii\db\ActiveRecord
             'id' => 'ID',
             'nombre' => 'Nombre',
             'password' => 'Password',
-            'auth_key' => 'Auth Key',
-            'telefono' => 'Teléfono',
-            'poblacion' => 'Población',
         ];
+    }
+
+    /**
+     * Gets query for [[Reservas]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReservas()
+    {
+        return $this->hasMany(Reservas::class, ['usuario_id' => 'id'])
+            ->inverseOf('usuario');
+    }
+
+    /**
+     * Gets query for [[Vuelos]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getVuelos()
+    {
+        return $this->hasMany(Vuelos::class, ['id' => 'vuelo_id'])
+            ->viaTable('reservas', ['usuario_id' => 'id']);
     }
 }
