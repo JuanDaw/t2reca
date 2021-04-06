@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Vuelos;
 use app\controllers\VuelosSearch;
+use app\models\ReservasForm;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -46,7 +47,17 @@ class VuelosController extends Controller
 
     public function actionReservar($id)
     {
-        return "$id";
+        $vuelo = $this->findModel($id);
+        $reservasForm = new ReservasForm();
+
+        if ($reservasForm->load(Yii::$app->request->post()) && $reservasForm->validate()){
+            
+        }
+
+        return $this->render('reservar', [
+            'vuelo' => $vuelo,
+            'reservasForm' => $reservasForm,
+        ]);
     }
 
     /**
