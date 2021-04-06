@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Vuelos;
 use yii\bootstrap4\Html;
 use yii\grid\GridView;
 use Yii;
@@ -35,23 +36,57 @@ $this->params['breadcrumbs'][] = $this->title;
             'llegada::datetime',
             'plazas',
             'precio::currency',
-
+            'plazasLibres',
+            // [
+            //     'label' => 'Plazas libres',
+            //     'value' => function ($model, $key, $index, $column) {
+            //         return $model->plazas - $model->getReservas()->count();
+            //     },
+            // ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{reservar} {anular}',
                 'buttons' => 
                 [
-                    'reservar' => function ($url, $model, $key) {
-                        if (Yii::$app->user->isGuest) {
-                            // se pinta
-                        } else {
-                            // if(no tiene reservas) {
-                                // se pinta
-                            //}
+                    'reservar' => function ($url, Vuelos $model, $key) {
+                        // $invitado = Yii::$app->user->isGuest;
+                        // if (!$invitado) {
+                        //     $tieneReservas = $model
+                        //     ->getReservas()
+                        //     ->andWhere([
+                        //         'usuario_id' => Yii::$app->user->id
+                        //         ])
+                        //     ->exists();
+                        // } else {
+                        //     $tieneReservas = false;
+                        // }
+
+                        if (!$model->tieneReserva()) {
+                            return Html::a('Reservar', [
+                                'vuelos/reservar',
+                                'id' => $model->id
+                            ], ['class' => 'btn-sm btn-info']);
                         }
                     },
-                    'anular' => function ($url, $model, $key) {
-                        // return the button HTML code
+                    'anular' => function ($url, Vuelos $model, $key) {
+                        // $invitado = Yii::$app->user->isGuest;
+                        // if (!$invitado) {
+                        //     $tieneReservas = $model
+                        //     ->getReservas()
+                        //     ->andWhere([
+                        //         'usuario_id' => Yii::$app->user->id
+                        //         ])
+                        //     ->exists();
+                        // } else {
+                        //     $tieneReservas = false;
+                        // }
+
+                        if ($model->tieneReserva()) {
+                            return Html::a('Anular', [
+                                'vuelos/anular',
+                                'id' => $model->id
+                            ], ['class' => 'btn-sm btn-danger']);
+                        }
                     },
                 ],
             ],

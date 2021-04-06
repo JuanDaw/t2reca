@@ -61,6 +61,7 @@ class Vuelos extends \yii\db\ActiveRecord
             'llegada' => 'Llegada',
             'plazas' => 'Plazas',
             'precio' => 'Precio',
+            'plazasLibres' => 'Plazas libres',
         ];
     }
 
@@ -106,5 +107,24 @@ class Vuelos extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Aeropuertos::class, ['id' => 'destino_id'])
             ->inverseOf('vuelosDestino');
+    }
+
+    public function tieneReserva($usuario_id = null)
+    {
+        if ($usuario_id === null) {
+            if (!Yii::$app->user->isGuest) {
+                $usuario_id = Yii::$app->user->id;
+            } else {
+                return false;
+            }
+        }
+
+        return $this->getReservas()
+        ->andWhere(['usuario_id' => $usuario_id])
+        ->exists();
+    }
+
+    public function getPlazasLibres() {
+        return $this->plazas - $this->getReservas()->count();
     }
 }

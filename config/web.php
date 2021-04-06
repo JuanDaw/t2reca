@@ -52,14 +52,13 @@ $config = [
         'formatter' => [
             'timeZone' => 'Europe/Madrid',
         ],
-        /*
         'urlManager' => [
-            'enablePrettyUrl' => true,
+            'enablePrettyUrl' => true, // se descomenta para habilitar las pretty url
             'showScriptName' => false,
             'rules' => [
+                'vuelos/reservar/<\d:id>' => 'vuelos/reservar'
             ],
         ],
-        */
     ],
     'container' => [
         'definitions' => [

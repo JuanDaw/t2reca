@@ -44,6 +44,11 @@ class VuelosController extends Controller
         ]);
     }
 
+    public function actionReservar($id)
+    {
+        return "$id";
+    }
+
     /**
      * Displays a single Vuelos model.
      * @param integer $id
