@@ -50,7 +50,7 @@ AppAsset::register($this);
                 '<li class="nav-item">'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
+                    'Logout (' . Yii::$app->user->identity->nombre . ')', // hay que cambiar esto para que coincida con el atributo de Usuarios
                     ['class' => 'btn btn-dark nav-link logout']
                 )
                 . Html::endForm()

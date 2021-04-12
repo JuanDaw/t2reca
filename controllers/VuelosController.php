@@ -5,7 +5,8 @@ namespace app\controllers;
 use Yii;
 use app\models\Vuelos;
 use app\controllers\VuelosSearch;
-use app\models\ReservasForm;
+use app\models\Reservas;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -22,9 +23,20 @@ class VuelosController extends Controller
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['reservar'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['reservar'],
+                        'roles' => ['@'], // esto significa que solo va a poder entrar en reservas cuando se este logueado
+                    ],
                 ],
             ],
         ];
@@ -48,15 +60,17 @@ class VuelosController extends Controller
     public function actionReservar($id)
     {
         $vuelo = $this->findModel($id);
-        $reservasForm = new ReservasForm();
+        $reservas = new Reservas();
+        $reservas->vuelo_id = $id;
+        $reservas->usuario_id = Yii::$app->user->id;
 
-        if ($reservasForm->load(Yii::$app->request->post()) && $reservasForm->validate()){
-            
+        if ($reservas->load(Yii::$app->request->post()) && $reservas->save()) {
+            return $this->redirect(['vuelos/index']);
         }
 
         return $this->render('reservar', [
             'vuelo' => $vuelo,
-            'reservasForm' => $reservasForm,
+            'reservas' => $reservas,
         ]);
     }
 

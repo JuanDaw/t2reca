@@ -23,8 +23,8 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'identityClass' => 'app\models\Usuarios',
+            'enableAutoLogin' => false, // al no tener authkey en el modelo de usuarios
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

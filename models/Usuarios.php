@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "usuarios".
@@ -14,7 +15,8 @@ use Yii;
  * @property Reservas[] $reservas
  * @property Vuelos[] $vuelos
  */
-class Usuarios extends \yii\db\ActiveRecord
+class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface 
+// para poder loguearse se tienen que implemetar la interfaz IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -69,5 +71,37 @@ class Usuarios extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Vuelos::class, ['id' => 'vuelo_id'])
             ->viaTable('reservas', ['usuario_id' => 'id']);
+    }
+
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // vacio porque no tenemos accesstoken
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getAuthKey()
+    {
+        // al no tener authkey no se puede hacer el logueado automatico
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        // vacio porque no tenemos authkey
+    }
+
+    public function validatePassword($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->password);
+        // el componente de aplicacion security se encarga de validar contraseñas pasandole la 
+        // contraseña introducida y la contraseña cifrada 
     }
 }

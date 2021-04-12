@@ -1,6 +1,7 @@
 <?php
 
 use yii\bootstrap4\ActiveForm;
+use yii\bootstrap4\Html;
 use yii\widgets\DetailView;
 
 $this->title = 'Reservar';
@@ -20,5 +21,10 @@ $this->params['breadcrumbs'][] = $this->title;
     ],
 ]) ?>
 
-<?= ActiveForm::begin() ?>
-    <?= $form->field($reservasForm, 'asiento')->dropdownList() ?>
+<?php $form = ActiveForm::begin() ?>
+    <?= $form->field($reservas, 'asiento')->dropdownList($vuelo->asientosLibres()) ?>
+
+    <div class="form-group">
+        <?= Html::submitButton('Reservar', ['class' => 'btn btn-primary']) ?>
+    </div>
+<?php ActiveForm::end() ?>
