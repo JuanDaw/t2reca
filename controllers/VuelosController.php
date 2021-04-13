@@ -28,17 +28,19 @@ class VuelosController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            // comprueba si al hacer delete se hace mediante post
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['reservar'],
+                'only' => ['reservar', 'anular'],
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['reservar'],
-                        'roles' => ['@'], // esto significa que solo va a poder entrar en reservas cuando se este logueado
+                        'actions' => ['reservar', 'anular'],
+                        'roles' => ['@'],
                     ],
                 ],
             ],
+            // esto significa que solo va a poder entrar en reservar o anular cuando se este logueado
         ];
     }
 
@@ -71,6 +73,20 @@ class VuelosController extends Controller
         return $this->render('reservar', [
             'vuelo' => $vuelo,
             'reservas' => $reservas,
+        ]);
+    }
+
+    public function actionAnular($id)
+    {
+        $reserva = $this->findReserva($id);
+
+        if(Yii::$app->request->isPost) {
+            Reservas::findOne($id)->delete();
+            return $this->redirect(['vuelos/index']);
+        }
+
+        return $this->render('anular', [
+            'reserva' => $reserva,
         ]);
     }
 
@@ -149,6 +165,15 @@ class VuelosController extends Controller
     protected function findModel($id)
     {
         if (($model = Vuelos::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function findReserva($id)
+    {
+        if (($model = Reservas::findOne($id)) !== null) {
             return $model;
         }
 

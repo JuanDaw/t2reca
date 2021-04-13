@@ -56,7 +56,8 @@ $config = [
             'enablePrettyUrl' => true, // se descomenta para habilitar las pretty url
             'showScriptName' => false,
             'rules' => [
-                'vuelos/reservar/<\d:id>' => 'vuelos/reservar'
+                'vuelos/reservar/<\d:id>' => 'vuelos/reservar',
+                'vuelos/anular/<\d:id>' => 'vuelos/anular',
             ],
         ],
     ],

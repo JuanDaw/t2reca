@@ -26,5 +26,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="form-group">
         <?= Html::submitButton('Reservar', ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Cancelar', '', [
+            'class' => 'btn btn-warning',
+        ]) ?>
     </div>
 <?php ActiveForm::end() ?>

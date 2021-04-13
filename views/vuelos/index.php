@@ -80,11 +80,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         // } else {
                         //     $tieneReservas = false;
                         // }
-
-                        if ($model->tieneReserva()) {
+                        $reserva = $model->tieneReserva();
+                        if ($reserva) {
                             return Html::a('Anular', [
                                 'vuelos/anular',
-                                'id' => $model->id
+                                'id' => $reserva->id
                             ], ['class' => 'btn-sm btn-danger']);
                         }
                     },

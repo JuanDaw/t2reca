@@ -109,6 +109,12 @@ class Vuelos extends \yii\db\ActiveRecord
             ->inverseOf('vuelosDestino');
     }
 
+    /**
+     * Comprueba si el usuario indicado tiene una reserva en el vuelo
+     * 
+     * @param int $usuario_id El ID del usuario; si es null, se usará el usuario actualmente logueado
+     * @return Reservas|bool La reserva si existe, o false si no existe
+     */
     public function tieneReserva($usuario_id = null)
     {
         if ($usuario_id === null) {
@@ -120,8 +126,8 @@ class Vuelos extends \yii\db\ActiveRecord
         }
 
         return $this->getReservas()
-        ->andWhere(['usuario_id' => $usuario_id])
-        ->exists();
+            ->andWhere(['usuario_id' => $usuario_id])
+            ->one() ?? false;
     }
 
     public function getPlazasLibres() {
